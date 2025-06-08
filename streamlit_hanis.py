@@ -35,7 +35,7 @@ if 'Total_Cost_USD' not in df.columns:
 
 # Sidebar layout
 with st.sidebar:
-    st.image("education.jpg", use_container_width=True)
+    st.image("edu2.jpg", use_container_width=True)
     st.title("🎓 EduNav")
     page = st.radio("Navigate", ["Dashboard", "Map", "University Table"])
     st.markdown("---")
