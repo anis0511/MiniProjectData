@@ -380,22 +380,6 @@ elif page == "Map":
         # Calling the top10 cards
         render_top10_uni(filtered_df)
 
-#_________________________________________________________________
-
-# Footer
-#st.markdown(
-#    """
-#    <style>
-#        .block-container {
-#            padding-top: 1rem;
-#            padding-bottom: 2rem;
-#        }
-#    </style>
-#    """,
-#    unsafe_allow_html=True
-#)
-
-
 
 # LIVE TIME
 st.sidebar.markdown(f"**Live Time:** {datetime.now().strftime('%H:%M:%S')}")
