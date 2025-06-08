@@ -28,18 +28,6 @@ if 'Total_Cost_USD' not in df.columns:
         df["Insurance_USD"]
     )
 
-# Sidebar layout
-with st.sidebar:
-    st.image("edu2.jpg", use_container_width=True)
-    st.title("🎓 EduNav")
-    page = st.radio("Navigate", ["Dashboard", "Map", "University Table"])
-    st.markdown("---")
-    selected_level = st.selectbox("Filter by Level", ["All"] + sorted(df["Level"].unique()))
-    if selected_level != "All":
-        filtered_df = df[df["Level"] == selected_level]
-    else:
-        filtered_df = df
-
 # Colored Pages
 st.markdown("""
 <style>
@@ -77,9 +65,22 @@ div[style*="background-color:#f0f2f6"] {
 </style>
 """, unsafe_allow_html=True)
 
+#________________________________________________________________________
+# SIDEBAR LAYOUT
+with st.sidebar:
+    st.image("edu2.jpg", use_container_width=True)
+    st.title("🎓 EduNav")
+    page = st.radio("Navigate", ["Dashboard", "Map", "University Table"])
+    st.markdown("---")
+    selected_level = st.selectbox("Filter by Level", ["All"] + sorted(df["Level"].unique()))
+    if selected_level != "All":
+        filtered_df = df[df["Level"] == selected_level]
+    else:
+        filtered_df = df
 
+#_________________________________________________________________________
 # Features that we want it to APPEAR IN ALL PAGES
-# cards of 'Top 10 Cheapest Tution Fees Universities'
+# CARDS of 'Top 10 Cheapest Tution Fees Universities'
 def render_top10_uni(filtered_df):
     st.subheader("🏅 Top 10 Cheapest Tuition Fees Universities")
     top10_unis = (
@@ -130,11 +131,11 @@ elif page == "Dashboard":
     # Metric Cards at the top
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("Avg Tuition", f"${filtered_df['Tuition_USD'].mean():,.0f}")
+        st.metric("Avg Tuition", f"${filtered_df['Tuition_USD'].mean():,.2f}")
     with col2:
-        st.metric("Avg Rent (Monthly)", f"${filtered_df['Rent_USD'].mean():,.0f}")
+        st.metric("Avg Rent (Monthly)", f"${filtered_df['Rent_USD'].mean():,.2f}")
     with col3:
-        st.metric("Avg Total Cost", f"${filtered_df['Total_Cost_USD'].mean():,.0f}")
+        st.metric("Avg Total Cost", f"${filtered_df['Total_Cost_USD'].mean():,.2f}")
     st.markdown("---")
 
     # Creating tabs for this page
@@ -186,18 +187,17 @@ elif page == "Dashboard":
                 ">
         """, unsafe_allow_html=True)
 
-
-
+	
         col_bar, _, col_pie, col_uni = st.columns([6, 0.5, 6, 5])
 
         with col_bar:
             colored_card("Total Universities", total_universities, "#E3F2FD")
             colored_card("Cheapest Country (Avg)", cheapest_country, "#F3E5F5")
 
-            # Close container
+            # Close container for cards
             st.markdown("</div>", unsafe_allow_html=True)
 
-
+            # BAR CHART ('AVERAGE OF EVERY COST TYPE')
             fig = px.bar(cost_avg, x="Cost Type", y="Average (USD)", color="Cost Type",
                  color_discrete_sequence=px.colors.qualitative.Pastel,
                  title="Average of Every Cost Type")
@@ -214,11 +214,11 @@ elif page == "Dashboard":
             # Close container
             st.markdown("</div>", unsafe_allow_html=True)
 
-            # Pie Chart
+            # PIE CHART ('DISTRIBUTION OF EDUCATION LEVELS')
             level_counts = df["Level"].value_counts().reset_index()
             level_counts.columns = ["Level", "Count"]
 
-            #custom color
+            #custom color for pie chart
             custom_colors = {
                 "Bachelor": "#FF6692",
                 "Master": "#FECB52",
@@ -235,7 +235,7 @@ elif page == "Dashboard":
             st.plotly_chart(fig_pie, use_container_width=True)
 
         with col_uni:
-            render_top10_uni(filtered_df)
+            render_top10_uni(filtered_df)     #call the top10 uni cards
 
  
         avg_by_duration = filtered_df.groupby("Duration_Years")[["Rent_USD", "Insurance_USD"]].mean().reset_index()
@@ -259,7 +259,7 @@ elif page == "Dashboard":
         st.plotly_chart(fig, use_container_width=True)
 
         
-
+        # BAR CHART (AVERAGE RENT & INSURANCE COST BY DURATION OF STUDIES (YEARS))
         top10_uni = (
             filtered_df.groupby("University")["Tuition_USD"]
             .mean()
@@ -284,12 +284,13 @@ elif page == "Dashboard":
 
 
         # Load data for Scatter Plot
-        df = filtered_df.copy()  # assuming filtered_df already exists
+       # df = filtered_df.copy()  # assuming filtered_df already exists
 
         
 #__________________________
 
-        # Assume df is already loaded and cleaned properly
+        # LINE PLOT (AVG VALUES GROUPED BY LEVEL & DURATION)
+	    
         df["Total_Cost"] = df["Tuition_USD"] + df["Rent_USD"] + df["Insurance_USD"]
         df["Avg_Annual_Tuition"] = df["Tuition_USD"] / df["Duration_Years"]
 
@@ -304,7 +305,6 @@ elif page == "Dashboard":
             }[x]
         )
 
-        # Line plot: average values grouped by Level and Duration
         grouped = df.groupby(["Level", "Duration_Years"])[y_axis_option].mean().reset_index()
 
         fig = px.line(
@@ -333,21 +333,20 @@ elif page == "Dashboard":
         )
 
         st.plotly_chart(fig, use_container_width=True)
-
-
-
-        
+	
 #_______________________________________________________________
     with tab2:
+	# DISTRIBUTION BAR GRAPH
         column = st.selectbox("Select Numeric Column", cost_cols + ["Duration_Years"])
         fig = px.histogram(filtered_df, x=column, nbins=20,
                            color_discrete_sequence=['#08FDD8'])
         fig.update_traces(marker_line_color='black', marker_line_width=1)
 
         st.plotly_chart(fig, use_container_width=True)
+	
 #_________________________________________________________________________
     
-# Map Page
+# MAP PAGE
 elif page == "Map":
     col1, col2 = st.columns([3,1])
     with col1:
@@ -355,6 +354,7 @@ elif page == "Map":
         uni_country = filtered_df.groupby("Country")["University"].nunique().reset_index()
         uni_country.columns = ["Country", "University Count"]
 
+	# MAP 
         fig = px.choropleth(uni_country, locations='Country', locationmode='country names',
                             color='University Count', color_continuous_scale='YlOrRd',
                             title='Number of Universities by Country')
@@ -365,7 +365,6 @@ elif page == "Map":
 	# Make group by country & calculate the average total education cost
         avg_cost_by_country = filtered_df.groupby("Country")["Tuition_USD"].mean().reset_index()
 
-        # Sort values for clearer visualization
         avg_cost_by_country = avg_cost_by_country.sort_values(by="Tuition_USD", ascending=False)
 
         fig_country = px.bar(
@@ -382,7 +381,7 @@ elif page == "Map":
 
 
     with col2:
-        # Cards
+        # Calling the top10 cards
         render_top10_uni(filtered_df)
 
 #_________________________________________________________________
@@ -405,10 +404,3 @@ st.markdown(
 # LIVE TIME
 st.sidebar.markdown(f"**Live Time:** {datetime.now().strftime('%H:%M:%S')}")
 
-# APA 
-#background
-#objective at least 3
-#choose and clean data, then save
-#proceed buat dashboard
-#buat discussion utk data kat dashboard dlm notebook
-#conclusion5
