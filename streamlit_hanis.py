@@ -16,7 +16,6 @@ st.image('edu2.jpg')
 #title for dashboard
 st.title("""Welcome to our Dashboard😄""")
 
-
 #upload data
 df = pd.read_csv("Cleaned_Education_Costs.csv")
 
@@ -79,7 +78,6 @@ div[style*="background-color:#f0f2f6"] {
 """, unsafe_allow_html=True)
 
 
-
 # Features that we want it to APPEAR IN ALL PAGES
 # cards of 'Top 10 Cheapest Tution Fees Universities'
 def render_top10_uni(filtered_df):
@@ -139,7 +137,7 @@ elif page == "Dashboard":
         st.metric("Avg Total Cost", f"${filtered_df['Total_Cost_USD'].mean():,.0f}")
     st.markdown("---")
 
-    # Charts
+    # Creating tabs for this page
     tab1, tab2 = st.tabs(["Cost Breakdown", "Distribution"])
 
     with tab1:
@@ -288,45 +286,7 @@ elif page == "Dashboard":
         # Load data for Scatter Plot
         df = filtered_df.copy()  # assuming filtered_df already exists
 
-        # Compute additional columns
-        df["Total_Cost"] = df["Tuition_USD"] + df["Rent_USD"] + df["Insurance_USD"]
-        df["Average_Annual_Tuition"] = df["Tuition_USD"] / df["Duration_Years"]
-
-        # Dropdown to choose Y-axis metric
-        y_axis_option = st.selectbox(
-            "Select Y-Axis Metric:",
-            (
-                "Tuition_USD",
-                "Total_Cost",
-                "Average_Annual_Tuition"
-            ),
-            format_func=lambda x: {
-                "Tuition_USD": "Tuition (USD)",
-                "Total_Cost": "Total Cost (Tuition + Rent + Insurance)",
-                "Average_Annual_Tuition": "Average Annual Tuition (USD)"
-            }[x]
-        )
-
-        # Scatter plot
-        fig = px.scatter(
-            df,
-            x="Duration_Years",
-            y=y_axis_option,
-            color="Level",  # Optional: You can change this to 'Country'
-            size="Tuition_USD",  # Optional bubble size
-            hover_data=["University", "Country", "Duration_Years"],
-            title=f"{y_axis_option.replace('_', ' ')} vs Duration of Studies",
-            opacity=0.7
-        )
-
-        fig.update_layout(
-            xaxis_title="Duration of Studies (Years)",
-            yaxis_title=y_axis_option.replace("_", " "),
-            title_x=0,
-            height=700,  # ⬅️ Increase vertical height here (default is ~450)
-        )
-
-        st.plotly_chart(fig, use_container_width=True)
+        
 #__________________________
 
         # Assume df is already loaded and cleaned properly
