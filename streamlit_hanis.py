@@ -22,10 +22,7 @@ st.title("""Welcome to our Dashboard😄""")
 
 
 #upload data
-@st.cache_data
-def load_data(uploaded_file):
-    return pd.read_csv("Cleaned_Education_Costs.csv")
-    df = load_data()
+df = pd.read_csv("Cleaned_Education_Costs.csv")
 
 # Calculate total cost
 if 'Total_Cost_USD' not in df.columns:
