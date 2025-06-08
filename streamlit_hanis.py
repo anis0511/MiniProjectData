@@ -23,9 +23,9 @@ st.title("""Welcome to our Dashboard😄""")
 
 #upload data
 @st.cache_data
-def  load_data():
-    return pd.read_csv(r"C:\Users\User-PC\Downloads\JUPITER\MINIPROJ\Cleaned_Education_Costs.csv")
-df = load_data()
+def load_data(uploaded_file):
+    return pd.read_csv("Cleaned_Education_Costs.csv")
+    df = load_data()
 
 # Calculate total cost
 if 'Total_Cost_USD' not in df.columns:
