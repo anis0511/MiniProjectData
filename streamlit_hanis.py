@@ -14,9 +14,6 @@ st.set_page_config(
 #uploading main image for dashboard
 st.image('edu2.jpg')
 
-st.date_input("Select a date")
-
-
 #title for dashboard
 st.title("""Welcome to our Dashboard😄""")
 
