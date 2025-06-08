@@ -10,7 +10,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-
 #uploading main image for dashboard
 st.image('edu2.jpg')
 
