@@ -282,15 +282,11 @@ elif page == "Dashboard":
         fig.update_layout(yaxis=dict(autorange="reversed"))  # To show highest at top
         st.plotly_chart(fig, use_container_width=True)
 
-
-        # Load data for Scatter Plot
-       # df = filtered_df.copy()  # assuming filtered_df already exists
-
-        
 #__________________________
 
         # LINE PLOT (AVG VALUES GROUPED BY LEVEL & DURATION)
-	    
+	
+        df = filtered_df.copy()
         df["Total_Cost"] = df["Tuition_USD"] + df["Rent_USD"] + df["Insurance_USD"]
         df["Avg_Annual_Tuition"] = df["Tuition_USD"] / df["Duration_Years"]
 
@@ -387,17 +383,17 @@ elif page == "Map":
 #_________________________________________________________________
 
 # Footer
-st.markdown(
-    """
-    <style>
-        .block-container {
-            padding-top: 1rem;
-            padding-bottom: 2rem;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+#st.markdown(
+#    """
+#    <style>
+#        .block-container {
+#            padding-top: 1rem;
+#            padding-bottom: 2rem;
+#        }
+#    </style>
+#    """,
+#    unsafe_allow_html=True
+#)
 
 
 
